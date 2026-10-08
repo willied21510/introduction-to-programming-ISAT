@@ -1,0 +1,158 @@
+include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
+using namespace std;
+
+// Function 1: Convert Decimal to Binary (returns string)
+string decimalToBinary(int decimal) {#
+    if (decimal == 0) return "0";
+    string binary = "";
+    bool isNegative = false;
+    if (decimal < 0) {
+        isNegative = true;
+        decimal = -decimal;
+    }
+    while (decimal > 0) {
+        binary = char('0' + (decimal % 2)) + binary;
+        decimal /= 2;
+    }
+    if (isNegative) binary = "-" + binary;
+    return binary;
+}
+
+// Function 2: Convert Binary to Decimal (returns int)
+int binaryToDecimal(string binary) {
+    int decimal = 0;
+    int base = 1;
+    bool isNegative = false;
+    if (!binary.empty() && binary[0] == '-') {
+        isNegative = true;
+        binary = binary.substr(1);
+    }
+    for (int i = binary.length() - 1; i >= 0; i--) {
+        if (binary[i] == '1') {
+            decimal += base;
+        } else if (binary[i] != '0') {
+            cout << "Invalid binary digit: " << binary[i] << endl;
+            return 0;
+        }
+        base *= 2;
+    }
+    return isNegative ? -decimal : decimal;
+}
+
+// Function 3: Convert Decimal to Hexadecimal (returns string)
+string decimalToHexadecimal(int decimal) {
+    if (decimal == 0) return "0";
+    string hex = "";
+    bool isNegative = false;
+    if (decimal < 0) {
+        isNegative = true;
+        decimal = -decimal;
+    }
+    char hexChars[] = "0123456789ABCDEF";
+    while (decimal > 0) {
+        hex = hexChars[decimal % 16] + hex;
+        decimal /= 16;
+    }
+    if (isNegative) hex = "-" + hex;
+    return hex;
+}
+
+// Function 4: Convert Hexadecimal to Decimal (returns int)
+int hexadecimalToDecimal(string hex) {
+    int decimal = 0;
+    int base = 1;
+    bool isNegative = false;
+    if (!hex.empty() && hex[0] == '-') {
+        isNegative = true;
+        hex = hex.substr(1);
+    }
+    // Convert to uppercase for consistency
+    transform(hex.begin(), hex.end(), hex.begin(), ::toupper);
+    for (int i = hex.length() - 1; i >= 0; i--) {
+        char c = hex[i];
+        int value = 0;
+        if (c >= '0' && c <= '9') value = c - '0';
+        else if (c >= 'A' && c <= 'F') value = 10 + (c - 'A');
+        else {
+            cout << "Invalid hexadecimal digit: " << c << endl;
+            return 0;
+        }
+        decimal += value * base;
+        base *= 16;
+    }
+    return isNegative ? -decimal : decimal;
+}
+
+// Demo: Generate random integer 0-99 and convert to binary
+void demo() {
+    int randomNum = rand() % 100;
+    cout << "Generated random integer: " << randomNum << endl;
+    cout << "Binary representation: " << decimalToBinary(randomNum) << endl;
+}
+
+// Display menu
+void displayMenu() {
+    cout << "\nConversion Menu:" << endl;
+    cout << "1. Convert Decimal to Binary" << endl;
+    cout << "2. Convert Binary to Decimal" << endl;
+    cout << "3. Convert Hexadecimal to Decimal" << endl;
+    cout << "4. Convert Decimal to Hexadecimal" << endl;
+    cout << "5. Demo (Generate and convert random integers to binary)" << endl;
+    cout << "6. Exit" << endl;
+}
+
+int main() {
+    srand(time(0)); // Seed random number generator
+    int choice;
+    do {
+        displayMenu();
+        cout << "Enter your choice (1-6): ";
+        cin >> choice;
+        cin.ignore(); // Clear newline from input buffer
+
+        switch (choice) {
+            case 1: {
+                int num;
+                cout << "Enter a decimal number: ";
+                cin >> num;
+                cout << "Binary representation: " << decimalToBinary(num) << endl;
+                break;
+            }
+            case 2: {
+                string bin;
+                cout << "Enter a binary number: ";
+                cin >> bin;
+                cout << "Decimal representation: " << binaryToDecimal(bin) << endl;
+                break;
+            }
+            case 3: {
+                string hex;
+                cout << "Enter a hexadecimal number: ";
+                cin >> hex;
+                cout << "Decimal representation: " << hexadecimalToDecimal(hex) << endl;
+                break;
+            }
+            case 4: {
+                int num;
+                cout << "Enter a decimal number: ";
+                cin >> num;
+                cout << "Hexadecimal representation: " << decimalToHexadecimal(num) << endl;
+                break;
+            }
+            case 5:
+                demo();
+                break;
+            case 6:
+                cout << "Exiting the program." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please enter a number between 1 and 6." << endl;
+        }
+    } while (choice != 6);
+
+    return 0;
+}
